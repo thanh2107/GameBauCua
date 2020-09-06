@@ -1,18 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ban"
+    android:orientation="vertical"
     tools:context=".MainActivity">
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Hello World!"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
 
-  </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <FrameLayout
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/backgroundframe">
+
+            <TextView
+                android:id="@+id/tvTien"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/backgroundview"
+                android:fontFamily="sans-serif-black"
+                android:text="500"
+
+
+                android:textColor="@color/colorwhite" />
+
+
+        </FrameLayout>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/phinh" />
+
+        <Button
+            android:id="@+id/btnthemXen"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/themxen"
+            android:onClick="ThemXen"
+            android:padding="3dp" />
+
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:button="@drawable/hinhamthanh"
+            android:text="@null" />
+        <TextView
+            android:id="@+id/tvThoiGian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="50dp"
+            android:text="00:03:00" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/gvBanCo"
+        android:layout_width="wrap_content"
+        android:layout_height="232dp"
+        android:numColumns="3"
+        android:verticalSpacing="20dp" />
+
+    <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+>
+
+  <ImageView
+      android:id="@+id/xingau1"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:layout_marginLeft="125dp"
+      android:src="@drawable/hinhdongxingau" />
+
+  <ImageView
+      android:id="@+id/xingau2"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:src="@drawable/hinhdongxingau" />
+
+  <ImageView
+      android:id="@+id/xingau3"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:src="@drawable/hinhdongxingau" />
+  
+ </LinearLayout>
+
+    <Button
+        android:id="@+id/btnLacXiNgau"
+        android:layout_width="116dp"
+        android:layout_height="39dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/buttonbatdau"
+        android:onClick="LacXiNgau"
+        android:text="@null" />
+
+</LinearLayout>
