@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
@@ -48,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
     private RewardedAd rewardedAd;
     public static final String TAG = MainActivity.class.getSimpleName();
-    Button buttonAds,btnBatDau;
+    Button buttonAds, btnBatDau;
     GridView gridView;
     Custom_BanCoActivity adapter;
-    Integer[] dsHinh ={R.drawable.nai, R.drawable.bau, R.drawable.ga, R.drawable.ca, R.drawable.cua, R.drawable.tom};
+    Integer[] dsHinh = {R.drawable.nai, R.drawable.bau, R.drawable.ga, R.drawable.ca, R.drawable.cua, R.drawable.tom};
     AnimationDrawable cdXiNgau1, cdXiNgau2, cdXiNgau3;
     ImageView hinhXiNgau1, hinhXiNgau2, hinhXiNgau3;
     Random randomXiNgau;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     CheckBox ktAmThanh;
     CountDownTimer demthoigian;
     //Su dung hàm callback de goi lai nhiều lần khi người dùng lắc xí ngầu
-    Handler.Callback  callback = new Handler.Callback() {
+    Handler.Callback callback = new Handler.Callback() {
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             // Gọi hàm ramdom dể xách định hình của 3 cục xí ngầu
@@ -93,24 +92,22 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-                    if(tienThuong > 0){
-                        Toast.makeText(getApplicationContext(), "Quá dữ bạn trúng được " + tienThuong, Toast.LENGTH_SHORT).show();
-                    }else if (tienThuong == 0) {
-                        Toast.makeText(getApplicationContext(), "Hên quá mém chết ! " , Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Ôi xui quá mất " +tienThuong , Toast.LENGTH_SHORT).show();
-                    }
+            if (tienThuong > 0) {
+                Toast.makeText(getApplicationContext(), "Quá dữ bạn trúng được " + tienThuong, Toast.LENGTH_SHORT).show();
+            } else if (tienThuong == 0) {
+                Toast.makeText(getApplicationContext(), "Hên quá mém chết ! ", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Ôi xui quá mất " + tienThuong, Toast.LENGTH_SHORT).show();
+            }
 
-                    LuuDuLieuNguoiDung(tienThuong);
-                    tvTien.setText(String.valueOf(tongtienmoi));
-                    btnBatDau.setEnabled(true);
-                    return false;
+            LuuDuLieuNguoiDung(tienThuong);
+            tvTien.setText(String.valueOf(tongtienmoi));
+            btnBatDau.setEnabled(true);
+            return false;
 
 
         }
     };
-
-
 
 
     @Override
@@ -144,27 +141,27 @@ public class MainActivity extends AppCompatActivity {
         ktAmThanh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean kt) {
-            if(kt){
-                // nhấp vào  kt = true thì dừng nhạc nền
-                nhacnen.stop();
-            }else{
-                try {
-                    nhacnen.prepare();
-                    nhacnen.start(); // ngược lại thì cho bắt đầu lại nhạc khi nhâp vào lần tiếp theo
-                } catch (IllegalStateException e){
-                    e.printStackTrace();
-                } catch (IOException e){
-                    //Auto-generated catch block
-                    e.printStackTrace();
+                if (kt) {
+                    // nhấp vào  kt = true thì dừng nhạc nền
+                    nhacnen.stop();
+                } else {
+                    try {
+                        nhacnen.prepare();
+                        nhacnen.start(); // ngược lại thì cho bắt đầu lại nhạc khi nhâp vào lần tiếp theo
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        //Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+
                 }
 
 
             }
-
-
-            }
         });
-        demthoigian = new CountDownTimer(180000,1000) {
+        demthoigian = new CountDownTimer(180000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -172,15 +169,15 @@ public class MainActivity extends AppCompatActivity {
                 long gio = TimeUnit.MILLISECONDS.toHours(milis);
                 long phut = TimeUnit.MILLISECONDS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milis));
                 long giay = TimeUnit.MILLISECONDS.toSeconds(milis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milis));
-                 // định dạng giờ
-                String giophutgiay = String.format("%02d:%02d:%02d", gio,phut,giay);
+                // định dạng giờ
+                String giophutgiay = String.format("%02d:%02d:%02d", gio, phut, giay);
                 tvThoiGian.setText(giophutgiay);
             }
 
             @Override
             public void onFinish() {
 
-            LuuDuLieuNguoiDung(1000);
+                LuuDuLieuNguoiDung(1000);
                 tvTien.setText(String.valueOf(tongtienmoi));
                 //reset time
                 demthoigian.cancel();
@@ -191,13 +188,14 @@ public class MainActivity extends AppCompatActivity {
         demthoigian.start();
         handler = new Handler(callback);
 
+        //Tạo quảng cáo
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
 
-            //Tạo quảng cáo đầu tiên khi load app
+        //tải quảng cáo đầu tiên khi load app
         rewardedAd = new RewardedAd(this,
                 "ca-app-pub-3940256099942544/5224354917");
         RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
@@ -215,54 +213,54 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Lắng nghe khi nhấp vào button thêm xèng (xem ads để được 5000 xèng )
-    buttonAds.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        buttonAds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            if (rewardedAd.isLoaded()) {
-                Activity activityContext = MainActivity.this;
+                if (rewardedAd.isLoaded()) {
+                    Activity activityContext = MainActivity.this;
 
-                RewardedAdCallback adCallback = new RewardedAdCallback() {
-                    private RewardedAd rewardedAd;
+                    RewardedAdCallback adCallback = new RewardedAdCallback() {
+                        private RewardedAd rewardedAd;
 
-                    @Override
-                    public void onRewardedAdOpened() {
+                        @Override
+                        public void onRewardedAdOpened() {
 
-                        // Ad opened.
-                        nhacnen.pause();
-                    }
+                            // Ad opened.
+                            nhacnen.pause();
+                        }
 
-                    @Override
-                    public void onRewardedAdClosed() {
+                        @Override
+                        public void onRewardedAdClosed() {
 
-                        // Ad closed.
-                        // tải ADS tiếp theo ngay khi quảng cáo đóng
-                        onRewardedAdClosedNext();
-                        nhacnen.start();
+                            // Ad closed.
+                            // tải ADS tiếp theo ngay khi quảng cáo đóng
+                            onRewardedAdClosedNext();
+                            nhacnen.start();
 
-                    }
+                        }
 
-                    @Override
-                    public void onUserEarnedReward(@NonNull RewardItem reward) {
-                        nhacnen.start();
-                        LuuDuLieuNguoiDung(217300);
-                        tvTien.setText(String.valueOf(tongtienmoi));
-                        Log.e("TAG", "xem adsxog");
-                    }
+                        @Override
+                        public void onUserEarnedReward(@NonNull RewardItem reward) {
+                            nhacnen.start();
+                            LuuDuLieuNguoiDung(5000);
+                            tvTien.setText(String.valueOf(tongtienmoi));
+                            Log.e("TAG", "xem adsxog");
+                        }
 
-                    @Override
-                    public void onRewardedAdFailedToShow(AdError adError) {
-                        adError.getCode();
+                        @Override
+                        public void onRewardedAdFailedToShow(AdError adError) {
+                            adError.getCode();
 
-                    }
-                };
-                rewardedAd.show(activityContext, adCallback);
-            } else {
-                Log.d("TAG", "The rewarded ad wasn't loaded yet.");
-                Toast.makeText(getApplicationContext(), "Đợi 1 tí ads đang tải nè !!! ", Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                    rewardedAd.show(activityContext, adCallback);
+                } else {
+                    Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+                    Toast.makeText(getApplicationContext(), "Chưa tải được quảng cáo!!! ", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-    });
+        });
 
 
     }
@@ -293,11 +291,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-//Luu lai du lieu tien cua nguoi dung tránh bị mất
-    private void LuuDuLieuNguoiDung(int tienthuong){
+    //Luu lai du lieu tien cua nguoi dung tránh bị mất
+    private void LuuDuLieuNguoiDung(int tienthuong) {
         SharedPreferences.Editor edit = luuTru.edit();
         tongtiencu = luuTru.getInt("TongTien", 1000);
         tongtienmoi = tongtiencu + tienthuong;
@@ -325,12 +320,12 @@ public class MainActivity extends AppCompatActivity {
         }
         tongtiencu = luuTru.getInt("TongTien", 1000);
         //Kiểm tra xem người dùng có đặt cược chưa
-        if(kiemtra == 0){
+        if (kiemtra == 0) {
             Toast.makeText(getApplicationContext(), "Bạn vui lòng đặt cược ! ", Toast.LENGTH_SHORT).show();
-        }else{
-            if(kiemtra > tongtiencu ){
+        } else {
+            if (kiemtra > tongtiencu) {
                 Toast.makeText(getApplicationContext(), "Bạn không đủ tiền để đặt cược ! ", Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 //bắt đầu âm thanh khi lắc
                 amThanhXiNgau.play(id_amthanh, 1.0f, 1.0f, 1, 0, 1.0f);
                 cdXiNgau1.start();
@@ -347,10 +342,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
     }
-    class LacXiNgau extends TimerTask {
 
+    class LacXiNgau extends TimerTask {
         @Override
         public void run() {
             handler.sendEmptyMessage(0);
@@ -359,40 +353,40 @@ public class MainActivity extends AppCompatActivity {
 
     //3 Hàm ramdom  ngẫu nhiên 6 giá trị từ 0-6 tương ứng với mỗi hình
     // trong danh sách hình bầu cua.
-    private void RamdomXiNgau1(){
-    randomXiNgau = new Random();
-    int rd = randomXiNgau.nextInt(6);
-    switch (rd){
-        case 0:
-            hinhXiNgau1.setImageResource(dsHinh[0]);
-            giaTriXiNgau1 = rd;
-            break;
-        case 1:
-            hinhXiNgau1.setImageResource(dsHinh[1]);
-            giaTriXiNgau1 = rd;
-            break;
+    private void RamdomXiNgau1() {
+        randomXiNgau = new Random();
+        int rd = randomXiNgau.nextInt(6);
+        switch (rd) {
+            case 0:
+                hinhXiNgau1.setImageResource(dsHinh[0]);
+                giaTriXiNgau1 = rd;
+                break;
+            case 1:
+                hinhXiNgau1.setImageResource(dsHinh[1]);
+                giaTriXiNgau1 = rd;
+                break;
 
-        case 2:
-            hinhXiNgau1.setImageResource(dsHinh[2]);
-            giaTriXiNgau1 = rd;
-            break;
+            case 2:
+                hinhXiNgau1.setImageResource(dsHinh[2]);
+                giaTriXiNgau1 = rd;
+                break;
 
-        case 3:
-            hinhXiNgau1.setImageResource(dsHinh[3]);
-            giaTriXiNgau1 = rd;
-            break;
+            case 3:
+                hinhXiNgau1.setImageResource(dsHinh[3]);
+                giaTriXiNgau1 = rd;
+                break;
 
-        case 4:
-            hinhXiNgau1.setImageResource(dsHinh[4]);
-            giaTriXiNgau1 = rd;
-            break;
+            case 4:
+                hinhXiNgau1.setImageResource(dsHinh[4]);
+                giaTriXiNgau1 = rd;
+                break;
 
-        case 5:
-            hinhXiNgau1.setImageResource(dsHinh[5]);
-            giaTriXiNgau1 = rd;
-            break;
+            case 5:
+                hinhXiNgau1.setImageResource(dsHinh[5]);
+                giaTriXiNgau1 = rd;
+                break;
 
-    }
+        }
     }
 
     private void RandomXiNgau2() {
@@ -473,13 +467,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//dừng nhạc và phát lại khi tắt mở app
+    //dừng nhạc và phát lại khi tắt mở app
     @Override
     public void onPause() {
         super.onPause();
         nhacnen.pause();
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
