@@ -46,7 +46,6 @@
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/themxen"
-            android:onClick="ThemXen"
             android:padding="3dp" />
 
 

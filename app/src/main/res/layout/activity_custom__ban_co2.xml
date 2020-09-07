@@ -33,6 +33,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
                 android:src="@drawable/phinh" />
 
         </FrameLayout>

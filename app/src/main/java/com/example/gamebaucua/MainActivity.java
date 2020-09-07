@@ -3,6 +3,7 @@ package com.example.gamebaucua;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
@@ -16,12 +17,24 @@ import android.os.Message;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import java.io.IOException;
 import java.util.Random;
@@ -32,8 +45,9 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    private RewardedAd rewardedAd;
     public static final String TAG = MainActivity.class.getSimpleName();
+    Button buttonAds;
     GridView gridView;
     Custom_BanCoActivity adapter;
     Integer[] dsHinh ={R.drawable.nai, R.drawable.bau, R.drawable.ga, R.drawable.ca, R.drawable.cua, R.drawable.tom};
@@ -60,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             RamdomXiNgau1();
             RandomXiNgau2();
             RandomXiNgau3();
-            //Lặp lại 6 lần tương ứng với chiều dài của gtDatCuoc
+            //Lặp lại 6 lần tương ứng với chiều dài của mảng gtDatCuoc
             for (int i = 0; i < gtDatCuoc.length; i++) {
                 if (gtDatCuoc[i] != 0) {
                     //So sanh gia tri dặt cược với 3 cục xí ngầu
@@ -109,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         ktAmThanh = (CheckBox) findViewById(R.id.checkBox1);
         gridView = (GridView) findViewById(R.id.gvBanCo);
         tvThoiGian = (TextView) findViewById(R.id.tvThoiGian);
+        buttonAds = (Button) findViewById(R.id.btnthemXen);
 
         //Đặt các giá trị cọc vào tưng hình trong DS hình
         adapter = new Custom_BanCoActivity(this, R.layout.activity_custom__ban_co2, dsHinh);
@@ -154,20 +169,17 @@ public class MainActivity extends AppCompatActivity {
                 long gio = TimeUnit.MILLISECONDS.toHours(milis);
                 long phut = TimeUnit.MILLISECONDS.toMinutes(milis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(milis));
                 long giay = TimeUnit.MILLISECONDS.toSeconds(milis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milis));
-
+                 // định dạng giờ
                 String giophutgiay = String.format("%02d:%02d:%02d", gio,phut,giay);
                 tvThoiGian.setText(giophutgiay);
             }
 
             @Override
             public void onFinish() {
-                SharedPreferences.Editor edit = luuTru.edit();
-                tongtiencu = luuTru.getInt("TongTien", 1000);
-                tongtienmoi = tongtiencu + 1000;
-                edit.putInt("TongTien", tongtienmoi );
-                edit.commit();
 
+            LuuDuLieuNguoiDung(1000);
                 tvTien.setText(String.valueOf(tongtienmoi));
+                //reset time
                 demthoigian.cancel();
                 demthoigian.start();
             }
@@ -175,7 +187,110 @@ public class MainActivity extends AppCompatActivity {
 
         demthoigian.start();
         handler = new Handler(callback);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+            //Tạo quảng cáo đầu tiên khi load app
+        rewardedAd = new RewardedAd(this,
+                "ca-app-pub-3940256099942544/5224354917");
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                Log.e("TAG", "Load thanh cong");
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                Log.e("TAG", "Load fail");
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+
+
+        //Lắng nghe khi nhấp vào button thêm xèng (xem ads để được 5000 xèng )
+    buttonAds.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            if (rewardedAd.isLoaded()) {
+                Activity activityContext = MainActivity.this;
+
+                RewardedAdCallback adCallback = new RewardedAdCallback() {
+                    private RewardedAd rewardedAd;
+
+                    @Override
+                    public void onRewardedAdOpened() {
+
+                        // Ad opened.
+                        nhacnen.pause();
+                    }
+
+                    @Override
+                    public void onRewardedAdClosed() {
+
+                        // Ad closed.
+                        // tải ADS tiếp theo ngay khi quảng cáo đóng
+                        onRewardedAdClosedNext();
+                        nhacnen.start();
+
+                    }
+
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem reward) {
+                        nhacnen.start();
+                        LuuDuLieuNguoiDung(5000);
+                        tvTien.setText(String.valueOf(tongtienmoi));
+                        Log.e("TAG", "xem adsxog");
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToShow(AdError adError) {
+                        adError.getCode();
+
+                    }
+                };
+                rewardedAd.show(activityContext, adCallback);
+            } else {
+                Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+            }
+        }
+    });
+
+
     }
+
+    // Tải tiếp quảng cáo tiếp theo
+    public RewardedAd createAndLoadRewardedAd() {
+        RewardedAd rewardedAd = new RewardedAd(this,
+                "ca-app-pub-3940256099942544/5224354917");
+        RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+                Log.e("TAG", "Load thanh cong2");
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError adError) {
+                // Ad failed to load.
+                Log.e("TAG", "fail2");
+            }
+        };
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+        return rewardedAd;
+    }
+
+    public void onRewardedAdClosedNext() {
+        this.rewardedAd = createAndLoadRewardedAd();
+    }
+
+
+
+
 
 //Luu lai du lieu tien cua nguoi dung tránh bị mất
     private void LuuDuLieuNguoiDung(int tienthuong){
@@ -189,11 +304,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public  void ThemXen (View v){
-
-        LuuDuLieuNguoiDung(1000);
-        tvTien.setText(String.valueOf(tongtienmoi));
-    }
     public void LacXiNgau(View v) {
         //Đặt hình xí ngầu tự động lắc
         hinhXiNgau1.setImageResource(R.drawable.hinhdongxingau);
@@ -224,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 cdXiNgau3.start();
                 // bắt đâu hiệu ứng của xí ngầu
                 tienThuong = 0;
-
+                //Lập lịch bắt đầu lắc xi ngâù trong 1s
                 timer.schedule(new LacXiNgau(), 1000);
             }
 
