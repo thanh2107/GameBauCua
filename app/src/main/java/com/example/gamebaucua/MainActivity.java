@@ -472,6 +472,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//dừng nhạc và phát lại khi tắt mở app
+    @Override
+    public void onPause() {
+        super.onPause();
+        nhacnen.pause();
 
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        nhacnen.start();
+
+    }
 
 }
