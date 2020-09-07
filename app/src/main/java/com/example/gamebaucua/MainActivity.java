@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RewardedAd rewardedAd;
     public static final String TAG = MainActivity.class.getSimpleName();
-    Button buttonAds;
+    Button buttonAds,btnBatDau;
     GridView gridView;
     Custom_BanCoActivity adapter;
     Integer[] dsHinh ={R.drawable.nai, R.drawable.bau, R.drawable.ga, R.drawable.ca, R.drawable.cua, R.drawable.tom};
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
                     LuuDuLieuNguoiDung(tienThuong);
                     tvTien.setText(String.valueOf(tongtienmoi));
+                    btnBatDau.setEnabled(true);
                     return false;
 
 
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         gridView = (GridView) findViewById(R.id.gvBanCo);
         tvThoiGian = (TextView) findViewById(R.id.tvThoiGian);
         buttonAds = (Button) findViewById(R.id.btnthemXen);
+        btnBatDau = (Button) findViewById(R.id.btnLacXiNgau);
 
         //Đặt các giá trị cọc vào tưng hình trong DS hình
         adapter = new Custom_BanCoActivity(this, R.layout.activity_custom__ban_co2, dsHinh);
@@ -200,12 +202,12 @@ public class MainActivity extends AppCompatActivity {
         RewardedAdLoadCallback adLoadCallback = new RewardedAdLoadCallback() {
             @Override
             public void onRewardedAdLoaded() {
-                Log.e("TAG", "Load thanh cong");
+                Log.e("TAG", "Load ads thanh cong");
             }
 
             @Override
             public void onRewardedAdFailedToLoad(LoadAdError adError) {
-                Log.e("TAG", "Load fail");
+                Log.e("TAG", "Load ads fail");
             }
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
@@ -242,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onUserEarnedReward(@NonNull RewardItem reward) {
                         nhacnen.start();
-                        LuuDuLieuNguoiDung(5000);
+                        LuuDuLieuNguoiDung(217300);
                         tvTien.setText(String.valueOf(tongtienmoi));
                         Log.e("TAG", "xem adsxog");
                     }
@@ -256,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 rewardedAd.show(activityContext, adCallback);
             } else {
                 Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+                Toast.makeText(getApplicationContext(), "Đợi 1 tí ads đang tải nè !!! ", Toast.LENGTH_SHORT).show();
             }
         }
     });
@@ -271,13 +274,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRewardedAdLoaded() {
                 // Ad successfully loaded.
-                Log.e("TAG", "Load thanh cong2");
+                Log.e("TAG", "Load ads2 thanh cong");
             }
 
             @Override
             public void onRewardedAdFailedToLoad(LoadAdError adError) {
                 // Ad failed to load.
-                Log.e("TAG", "fail2");
+                Log.e("TAG", "fail ads 2");
             }
         };
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
@@ -336,6 +339,8 @@ public class MainActivity extends AppCompatActivity {
                 tienThuong = 0;
                 //Lập lịch bắt đầu lắc xi ngâù trong 1s
                 timer.schedule(new LacXiNgau(), 1000);
+                btnBatDau.setEnabled(false);  // không cho click vào lắc liên tục
+
             }
 
         }
