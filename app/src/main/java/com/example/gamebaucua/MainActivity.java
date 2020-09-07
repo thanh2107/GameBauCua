@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     }else if (tienThuong == 0) {
                         Toast.makeText(getApplicationContext(), "Hên quá mém chết ! " , Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(getApplicationContext(), "Ôi xui quá mất " , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Ôi xui quá mất " +tienThuong , Toast.LENGTH_SHORT).show();
                     }
 
                     LuuDuLieuNguoiDung(tienThuong);
